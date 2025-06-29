@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// File: Schema/Restaurant.js
+import mongoose from 'mongoose';
 
 const RestaurantSchema = new mongoose.Schema({
   name: String,
@@ -7,4 +8,6 @@ const RestaurantSchema = new mongoose.Schema({
   phone: String
 }, { timestamps: true });
 
-module.exports = mongoose.model('Restaurant', RestaurantSchema);
+const Restaurant = mongoose.model('Restaurant', RestaurantSchema);
+
+export default Restaurant;
