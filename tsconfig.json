@@ -12,6 +12,14 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "Backend/index.js",
+    "Backend/Controllers/authController.js",
+    "Backend/router/authRoute.js",
+    "Backend/Schema/UserModel.js",
+    "Backend/utils/MongoDatabase.js",
+    "Backend/utils/generateToken.js",
+    "app/(auth)/login.tsx",
+    "components/Cards/ProfileOptionCard.js"
   ]
 }

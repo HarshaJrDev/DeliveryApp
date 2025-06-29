@@ -1,26 +1,26 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+const COLORS = {
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+  PRIMARY: '#E53935',         // Tomato Red
+  SECONDARY: '#43A047',       // Fresh Green
+  ACCENT: '#FFB300',          // Sunshine Yellow
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+
+  BACKGROUND_LIGHT: '#FFF8E1', // Creamy Light Background
+  BACKGROUND_WHITE: '#FFFFFF',
+  BACKGROUND_DARK: '#333333',
+
+
+  TEXT_PRIMARY: '#333333',    // Main text
+  TEXT_SECONDARY: '#757575',  // Lighter text
+  TEXT_INVERSE: '#FFFFFF',    // Light text on dark backgrounds
+
+
+  SUCCESS: '#4CAF50',         // Delivered
+  ERROR: '#F44336',           // Failed order
+  INFO: '#2196F3',            // Info or notifications
+
+
+  BORDER: '#BDBDBD',
 };
+
+export default COLORS;

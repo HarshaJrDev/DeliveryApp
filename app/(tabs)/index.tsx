@@ -1,75 +1,103 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
+import React, { useState } from "react";
+import Header from "@/components/Header/Header";
+import SearchBar from "@/components/Search/SearchBar";
+import FilterModal from "@/components/Modal/FilterModal";
+import COLORS from "@/constants/Colors";
+import { useRouter } from "expo-router";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import categories from "@/Mock/categories";
+import CategoryGrid from "@/components/CategoryGrid";
+import CategoryCarousel from "@/components/Carousel/CategoryCarousel";
+import FoodItemCard from "@/components/Cards/FoodItemCard";
+import foodData from "@/Mock/foodData";
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+const Index = () => {
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [searchData, setSearchData] = useState("");
+
+  const router = useRouter();
+
+  const onpressSearch = () => {
+    router.push("search");
+  };
+
+  const handleAddToCart = (id: string) => {
+    console.log("Add to cart:", id);
+  };
+
+  const renderHeader = () => (
+    <View style={styles.headerWrapper}>
+      <Header />
+
+      <TouchableOpacity onPress={onpressSearch} activeOpacity={0.8}>
+        <SearchBar
+          disabled
+          value={searchData}
+          onChange={(text) => setSearchData(text)}
+          onFilterPress={() => setFilterModalVisible(true)}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </TouchableOpacity>
+
+      <CategoryCarousel categories={categories} />
+      <CategoryGrid categories={categories} />
+
+      <Text style={styles.sectionTitle}>Recommended for you</Text>
+    </View>
   );
-}
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={foodData}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <FoodItemCard data={item}  onPress={() => router.push('FoodDetailScreen', { item })} onAddToCart={() => handleAddToCart(item.id)} />
+        )}
+        ListHeaderComponent={renderHeader}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
+
+      <FilterModal
+        visible={filterModalVisible}
+        onClose={() => setFilterModalVisible(false)}
+        onSelect={(option) => setSelectedFilter(option)}
+      />
+    </SafeAreaView>
+  );
+};
+
+export default Index;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND_LIGHT,
+    bottom:40
   },
-  stepContainer: {
-    gap: 8,
+  headerWrapper: {
+
+    paddingTop: 12,
+    gap: 16,
+  },
+  listContent: {
+    paddingBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginTop: 16,
     marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+    color: COLORS.TEXT_PRIMARY,
+    paddingHorizontal: 16,
   },
 });
