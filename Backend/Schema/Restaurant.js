@@ -1,4 +1,4 @@
-
+// Schema/Restaurant.js
 import mongoose from 'mongoose';
 
 const RestaurantSchema = new mongoose.Schema({
@@ -8,6 +8,4 @@ const RestaurantSchema = new mongoose.Schema({
   phone: String
 }, { timestamps: true });
 
-const Restaurant = mongoose.model('Restaurant', RestaurantSchema);
-
-export default Restaurant;
+export const Restaurant = mongoose.model("Restaurant", RestaurantSchema);

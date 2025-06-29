@@ -1,5 +1,6 @@
-// File: controllers/restaurantController.js
-import Restaurant from "../Schema/Restaurant.js";
+
+import {Restaurant} from "../Schema/Restaurant.js";
+
 
 export const getAllRestaurants = async (req, res) => {
   try {
