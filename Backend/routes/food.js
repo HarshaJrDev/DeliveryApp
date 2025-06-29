@@ -1,17 +1,18 @@
-const express = require("express");
-const router = express.Router({ mergeParams: true });
-const {
+import express from 'express';
+import {
   getAllFoodsByRestaurant,
   getFoodItem,
   createFoodItem,
   updateFoodItem,
-  deleteFoodItem
-} = require("../controllers/foodController");
+  deleteFoodItem,
+} from '../controllers/foodController.js';
 
-router.get("/", getAllFoodsByRestaurant);
-router.get("/:foodId", getFoodItem);
-router.post("/", createFoodItem);
-router.put("/:foodId", updateFoodItem);
-router.delete("/:foodId", deleteFoodItem);
+const router = express.Router({ mergeParams: true });
 
-module.exports = router;
+router.get('/', getAllFoodsByRestaurant);
+router.get('/:foodId', getFoodItem);
+router.post('/', createFoodItem);
+router.put('/:foodId', updateFoodItem);
+router.delete('/:foodId', deleteFoodItem);
+
+export default router;

@@ -1,52 +1,95 @@
-const FoodItem = require("../models/FoodItem");
+import FoodItem from "../Schema/FoodItem.js";
 
-exports.getAllFoodsByRestaurant = async (req, res) => {
+// Get all food items for a specific restaurant
+export const getAllFoodsByRestaurant = async (req, res) => {
   try {
     const foodItems = await FoodItem.find({ restaurantId: req.params.restaurantId });
-    res.json(foodItems);
+    res.status(200).json({ success: true, data: foodItems });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching food items:", err);
+    res.status(500).json({ success: false, error: "Failed to fetch food items" });
   }
 };
 
-exports.getFoodItem = async (req, res) => {
+// Get a single food item by ID, only if it belongs to the restaurant
+export const getFoodItem = async (req, res) => {
   try {
     const food = await FoodItem.findById(req.params.foodId);
-    if (!food || food.restaurantId.toString() !== req.params.restaurantId)
-      return res.status(404).json({ error: "Food item not found for this restaurant" });
-    res.json(food);
+    if (!food) {
+      return res.status(404).json({ success: false, error: "Food item not found" });
+    }
+
+    if (food.restaurantId.toString() !== req.params.restaurantId) {
+      return res.status(403).json({ success: false, error: "Unauthorized access to food item" });
+    }
+
+    res.status(200).json({ success: true, data: food });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error getting food item:", err);
+    res.status(500).json({ success: false, error: "Failed to retrieve food item" });
   }
 };
 
-exports.createFoodItem = async (req, res) => {
+// Create a new food item for a restaurant
+export const createFoodItem = async (req, res) => {
   try {
+    const requiredFields = ["name", "price", "category", "isVeg", "image"];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({ success: false, error: `${field} is required` });
+      }
+    }
+
     const newFood = new FoodItem({
       ...req.body,
-      restaurantId: req.params.restaurantId
+      restaurantId: req.params.restaurantId,
     });
-    await newFood.save();
-    res.status(201).json(newFood);
+
+    const savedFood = await newFood.save();
+    res.status(201).json({ success: true, data: savedFood });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error("Error creating food item:", err);
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 
-exports.updateFoodItem = async (req, res) => {
+// Update a food item (only if it belongs to the restaurant)
+export const updateFoodItem = async (req, res) => {
   try {
-    const food = await FoodItem.findByIdAndUpdate(req.params.foodId, req.body, { new: true });
-    res.json(food);
+    const food = await FoodItem.findById(req.params.foodId);
+    if (!food) {
+      return res.status(404).json({ success: false, error: "Food item not found" });
+    }
+
+    if (food.restaurantId.toString() !== req.params.restaurantId) {
+      return res.status(403).json({ success: false, error: "Unauthorized update attempt" });
+    }
+
+    Object.assign(food, req.body);
+    const updatedFood = await food.save();
+    res.status(200).json({ success: true, data: updatedFood });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error("Error updating food item:", err);
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 
-exports.deleteFoodItem = async (req, res) => {
+// Delete a food item (only if it belongs to the restaurant)
+export const deleteFoodItem = async (req, res) => {
   try {
-    await FoodItem.findByIdAndDelete(req.params.foodId);
-    res.json({ message: "Food item deleted" });
+    const food = await FoodItem.findById(req.params.foodId);
+    if (!food) {
+      return res.status(404).json({ success: false, error: "Food item not found" });
+    }
+
+    if (food.restaurantId.toString() !== req.params.restaurantId) {
+      return res.status(403).json({ success: false, error: "Unauthorized delete attempt" });
+    }
+
+    await food.deleteOne();
+    res.status(200).json({ success: true, message: "Food item deleted successfully" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error deleting food item:", err);
+    res.status(500).json({ success: false, error: "Failed to delete food item" });
   }
 };

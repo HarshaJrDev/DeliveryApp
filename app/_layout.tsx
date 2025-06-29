@@ -28,11 +28,11 @@ export default function RootLayout() {
     'Poppins-Italic': require('../assets/fonts/Poppins-Italic.ttf'),
   });
 
-  const hydrate = useAuthStore((state) => state.hydrate);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const hydrate = useAuthStore.getState().hydrate;
 
   useEffect(() => {
-    hydrate(); // Load persisted auth state on startup
+    hydrate();
   }, []);
 
   if (!loaded) return null;
@@ -50,7 +50,6 @@ export default function RootLayout() {
               <Stack.Screen name="orders" />
             </>
           )}
-        
         </Stack>
       </QueryClientProvider>
     </ThemeProvider>

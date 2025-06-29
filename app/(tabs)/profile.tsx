@@ -1,29 +1,55 @@
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProfileOptionCard from '@/components/Cards/ProfileOptionCard';
 import COLORS from '@/constants/Colors';
 import FONTS from '@/constants/Fonts';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import useAuthStore from '../Store/authStore';
+import CustomLoader from '@/components/Loader/CustomLoader';
+import LogOut from '../(auth)/login';
 
 const Profile = () => {
   const route = useRouter()
+const user = useAuthStore((state) => state.user);
+const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+const hydrate = useAuthStore.getState().hydrate; 
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      await hydrate();
+      setLoading(false);
+    };
+    loadUser();
+  }, []);
+
+  if (loading) {
+    return <CustomLoader/>;
+  }
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* User Info Section */}
+
       <View style={styles.header}>
         <Image
           source={{ uri: 'https://i.pravatar.cc/300' }}
           style={styles.avatar}
         />
-        <Text style={styles.name}>John Doe</Text>
-        <Text style={styles.email}>john.doe@example.com</Text>
+
+      {isLoggedIn ? (
+  <View>
+    <Text style={styles.name}>{user?.name}</Text>
+    <Text style={styles.email}>{user?.email}</Text>
+  </View>
+) : null}
+       
         <TouchableOpacity style={styles.editButton}>
           <Text style={styles.editText}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Saved Addresses */}
+
       <Text style={styles.sectionTitle}>Saved Addresses</Text>
       <ProfileOptionCard
         icon="location-outline"
@@ -32,7 +58,6 @@ const Profile = () => {
         onPress={() => {}}
       />
 
-      {/* Order History */}
       <Text style={styles.sectionTitle}>Orders</Text>
       <ProfileOptionCard
         icon="fast-food-outline"
@@ -119,7 +144,8 @@ const Profile = () => {
         icon="log-out-outline"
         title="Logout"
         iconColor={COLORS.ERROR}
-        onPress={()=>route.replace('/(auth)/login')}
+   onPress={LogOut
+  }
       />
       <ProfileOptionCard
         icon="trash-outline"
@@ -156,6 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: FONTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
+    textAlign:"center"
   },
   email: {
     fontSize: 14,

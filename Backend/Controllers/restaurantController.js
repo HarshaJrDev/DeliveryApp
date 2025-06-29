@@ -1,16 +1,40 @@
+import Restaurant from "../Schema/Restaurant.js";
+import FoodItem from "../Schema/FoodItem.js"; // ✅ Add this line
 
-import {Restaurant} from "../Schema/Restaurant.js";
-
-
-export const getAllRestaurants = async (req, res) => {
+// Get a single restaurant with its food items
+export const getRestaurantWithFoods = async (req, res) => {
   try {
-    const restaurants = await Restaurant.find();
-    res.json(restaurants);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const restaurant = await Restaurant.findById(req.params.id);
+    if (!restaurant) {
+      return res.status(404).json({ success: false, message: "Restaurant not found" });
+    }
+
+    const foodItems = await FoodItem.find({ restaurantId: req.params.id });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        ...restaurant.toObject(),
+        foodItems,
+      },
+    });
+  } catch (error) {
+    console.error("getRestaurantWithFoods error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
+// Get all restaurants
+export const getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find().sort({ _id: 1 });
+    res.status(200).json({ success: true, data: restaurants });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch restaurants' });
+  }
+};
+
+// Get a single restaurant
 export const getRestaurant = async (req, res) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
@@ -21,6 +45,7 @@ export const getRestaurant = async (req, res) => {
   }
 };
 
+// Create a new restaurant
 export const createRestaurant = async (req, res) => {
   try {
     const restaurant = new Restaurant(req.body);
@@ -31,6 +56,7 @@ export const createRestaurant = async (req, res) => {
   }
 };
 
+// Update an existing restaurant
 export const updateRestaurant = async (req, res) => {
   try {
     const restaurant = await Restaurant.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -41,6 +67,7 @@ export const updateRestaurant = async (req, res) => {
   }
 };
 
+// Delete a restaurant
 export const deleteRestaurant = async (req, res) => {
   try {
     const restaurant = await Restaurant.findByIdAndDelete(req.params.id);

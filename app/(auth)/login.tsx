@@ -19,7 +19,7 @@ import useAuthStore from "../Store/authStore";
 import CustomLoader from "@/components/Loader/CustomLoader";
 
 const LogOut = () => {
-  const [email, setEmail] = useState("Harsha01@gmail.com");
+  const [email, setEmail] = useState("harsha01@gmail.com");
   const [password, setPassword] = useState("Qazxcqazxc@01");
     const loginToStore = useAuthStore((state) => state.login);
 
@@ -51,7 +51,7 @@ loginToStore({
       Alert.alert("Missing Fields", "Please enter both email and password");
       return;
     }
- loginUser({ email, password }); // <-- payload passed here
+  loginUser();
   };
 
   return (

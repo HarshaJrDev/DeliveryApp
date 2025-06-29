@@ -1,4 +1,4 @@
-// driverSocket.js (ESM style)
+
 const driverSocket = (io) => {
   io.on("connection", (socket) => {
     console.log("📡 Driver connected:", socket.id);

@@ -11,6 +11,8 @@ import authRoute from "./routes/auth.js";
 import restaurantRoute from "./routes/restaurant.js";
 import driverRoute from "./routes/driver.js";
 import orderRoute from "./routes/order.js";
+import restaurantRoutes from "./routes/food.js"
+
 
 // Sockets
 import chatSocket from "./Socket.io/chatSocket.js";
@@ -36,6 +38,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/restaurants", restaurantRoute);
 app.use("/api/drivers", driverRoute);
 app.use("/api/orders", orderRoute);
+app.use('/api/restaurants', restaurantRoutes);
+app.use('/api/restaurants/:restaurantId/foods', restaurantRoutes);
 
 // Sockets
 chatSocket(io);
