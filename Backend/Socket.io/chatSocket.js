@@ -1,4 +1,5 @@
-module.exports = (io) => {
+// ✅ ES Module
+const chatSocket = (io) => {
   io.on("connection", (socket) => {
     console.log("💬 Chat user connected:", socket.id);
 
@@ -20,3 +21,5 @@ module.exports = (io) => {
     });
   });
 };
+
+export default chatSocket;
