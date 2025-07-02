@@ -1,6 +1,3 @@
-import Colors from "@/constants/Colors";
-import Fonts from "@/constants/Fonts";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -9,20 +6,22 @@ import {
   View,
   Alert,
 } from "react-native";
-import CustomButton from "../../components/Buttons/CustomButton";
-import InputField from "../../components/TextInputs/InputField";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
-import api from "@/hooks/api";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
+import Colors from "@/constants/Colors";
 import FONTS from "@/constants/Fonts";
+import CustomButton from "../../components/Buttons/CustomButton";
+import InputField from "../../components/TextInputs/InputField";
+import api from "@/hooks/api";
 import useAuthStore from "../Store/authStore";
 import CustomLoader from "@/components/Loader/CustomLoader";
 
 const LogOut = () => {
-  const [email, setEmail] = useState("harsha01@gmail.com");
-  const [password, setPassword] = useState("Qazxcqazxc@01");
-    const loginToStore = useAuthStore((state) => state.login);
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const loginToStore = useAuthStore((state) => state.login);
   const router = useRouter();
 
   const { mutate: loginUser, isPending } = useMutation({
@@ -32,13 +31,13 @@ const LogOut = () => {
       const response = await api.post("/login", payload);
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Login success:", data);
-loginToStore({
+      loginToStore({
         name: data.name || "User",
         email: data.email,
       });
-      router.push("/GetLocation"); // Replace with your home screen
+      router.push("/GetLocation");
     },
     onError: (error: any) => {
       console.error("Login error:", error?.response?.data || error.message);
@@ -46,21 +45,30 @@ loginToStore({
     },
   });
 
+
+
+const handlerolebaseauth = ()=>{
+  if(email == "driver" && password == "driver"){
+    router.push("(tabs)/")
+ 
+
+}
+
+
   const handleLogin = () => {
     if (!email || !password) {
       Alert.alert("Missing Fields", "Please enter both email and password");
       return;
     }
-  loginUser();
+    loginUser();
   };
+
+
 
   return (
     <View style={styles.container}>
-
-       {isPending && <CustomLoader />}
+      {isPending && <CustomLoader />}
       <Text style={styles.headerText}>Login</Text>
-
-
 
       <InputField
         iconName="envelope"
@@ -117,6 +125,7 @@ loginToStore({
 };
 
 export default LogOut;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

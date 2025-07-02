@@ -1,4 +1,4 @@
-// components/Loader/CustomLoader.tsx
+
 import React from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";

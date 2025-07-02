@@ -19,7 +19,7 @@
     "src/Backend/Schema/UserModel.js",
     "src/Backend/utils/MongoDatabase.js",
     "src/Backend/utils/generateToken.js",
-    "app/(auth)/login.tsx",
+    "app/(auth)/login.jsx",
     "components/Cards/ProfileOptionCard.js"
   ]
 }
